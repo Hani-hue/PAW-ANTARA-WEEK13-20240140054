@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= mode === 'edit' ? 'Edit' : 'Tambah' %> Produk - <%= storeName %></title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-  <%- include('partials/nav', { storeName, active: 'admin' }) %>
+<%- include('partials/header', { 
+  title: (mode === 'edit' ? 'Edit' : 'Tambah') + ' Produk', 
+  active: 'admin',
+  extraCss: `input:focus, textarea:focus { outline: none; box-shadow: 0 0 0 2px #5996FF; border-color: #5996FF !important; }`
+}) %>
 
   <main class="max-w-lg mx-auto px-4 pb-10">
-    <h2 class="font-semibold text-gray-700 mb-3">
-      <%= mode === 'edit' ? 'Edit Produk' : 'Tambah Produk Baru' %>
+    <h2 class="font-bold text-lg mb-5" style="color:#1B4EF5">
+      <%= mode === 'edit' ? '✏️ Edit Produk' : '➕ Tambah Produk Baru' %>
     </h2>
 
     <% if (error) { %>
-      <div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">
+      <div class="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style="background:#fff0f0;border:1px solid #fca5a5;color:#dc2626">
         <%= error %>
       </div>
     <% } %>
@@ -23,62 +18,68 @@
     <form
       method="POST"
       action="<%= mode === 'edit' ? '/admin/products/' + product.id : '/admin/products' %>"
-      class="bg-white border border-gray-200 rounded-xl p-5 space-y-3"
+      class="rounded-2xl p-6 shadow-sm space-y-4"
+      style="background:#fff;border:1px solid #c4d6ff"
     >
       <div>
-        <label class="text-sm text-gray-600">Nama Produk</label>
+        <label class="text-sm font-medium block mb-1" style="color:#3874FF">Nama Produk</label>
         <input
           type="text"
           name="name"
           required
           value="<%= product ? product.name : '' %>"
-          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 rounded-xl text-sm"
+          style="border:1px solid #c4d6ff;color:#1B4EF5;background:#f8f9ff"
         />
       </div>
       <div>
-        <label class="text-sm text-gray-600">Deskripsi</label>
+        <label class="text-sm font-medium block mb-1" style="color:#3874FF">Deskripsi</label>
         <textarea
           name="description"
           rows="3"
-          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 rounded-xl text-sm resize-none"
+          style="border:1px solid #c4d6ff;color:#1B4EF5;background:#f8f9ff"
         ><%= product && product.description ? product.description : '' %></textarea>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="text-sm text-gray-600">Harga (Rp)</label>
+          <label class="text-sm font-medium block mb-1" style="color:#3874FF">Harga (Rp)</label>
           <input
             type="number"
             name="price"
             min="0"
             required
             value="<%= product ? product.price : '' %>"
-            class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-4 py-2.5 rounded-xl text-sm"
+            style="border:1px solid #c4d6ff;color:#1B4EF5;background:#f8f9ff"
           />
         </div>
         <div>
-          <label class="text-sm text-gray-600">Stok</label>
+          <label class="text-sm font-medium block mb-1" style="color:#3874FF">Stok</label>
           <input
             type="number"
             name="stock"
             min="0"
             required
             value="<%= product ? product.stock : 0 %>"
-            class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-4 py-2.5 rounded-xl text-sm"
+            style="border:1px solid #c4d6ff;color:#1B4EF5;background:#f8f9ff"
           />
         </div>
       </div>
 
-      <div class="flex gap-2 pt-2">
+      <div class="flex gap-3 pt-2">
         <button
           type="submit"
-          class="flex-1 bg-blue-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-blue-700"
+          class="flex-1 text-white text-sm font-semibold py-2.5 rounded-xl transition-all hover:opacity-90 shadow"
+          style="background:linear-gradient(135deg,#1B4EF5,#3874FF)"
         ><%= mode === 'edit' ? 'Simpan Perubahan' : 'Tambah Produk' %></button>
         <a
           href="/admin/products"
-          class="px-4 py-2 text-sm rounded-lg font-medium bg-gray-100 text-gray-600 hover:bg-gray-200"
+          class="px-5 py-2.5 text-sm rounded-xl font-medium transition-all hover:opacity-80"
+          style="background:#F4CEFF;color:#1B4EF5"
         >Batal</a>
       </div>
     </form>
   </main>
-</body>
-</html>
+<%- include('partials/footer') %>

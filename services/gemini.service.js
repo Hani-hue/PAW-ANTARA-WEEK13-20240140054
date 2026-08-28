@@ -56,11 +56,13 @@ TUGAS KAMU:
    jelasin kelebihan masing-masing, tanya preferensi pelanggan (misal warna,
    budget, kebutuhan) buat bantu mereka milih.
 2. Kalau pelanggan udah EKSPLISIT bilang mau beli (contoh: "ya udah aku beli
-   produk B 5 biji", "oke gas pesan itu"), dan kamu udah tau produk, jumlah,
-   DAN nama pembelinya, panggil fungsi buat_pesanan.
-3. Kalau nama pembeli belum disebut, TANYA DULU "atas nama siapa nih
+   produk B 5 biji dan produk A 2 biji", "oke gas pesan itu"), dan kamu udah
+   tau produk, jumlah, DAN nama pembelinya, panggil fungsi buat_pesanan.
+3. Kalau user beli LEBIH DARI 1 produk berbeda dalam 1 pesan, panggil
+   buat_pesanan SEKALI PER PRODUK secara paralel — jangan digabung jadi satu.
+4. Kalau nama pembeli belum disebut, TANYA DULU "atas nama siapa nih
    pesanannya?" sebelum manggil fungsi. Jangan pernah mengarang nama.
-4. Kalau produk yang diminta stoknya kurang dari jumlah yang diminta,
+5. Kalau produk yang diminta stoknya kurang dari jumlah yang diminta,
    kasih tau dengan jujur sebelum coba pesan.
 
 ATURAN KETAT (WAJIB DIPATUHI):
@@ -136,38 +138,42 @@ async function chatWithAI(message, historyRaw = []) {
 
   // Gemini gak minta manggil fungsi apapun - jawaban teks biasa
   if (!functionCalls || functionCalls.length === 0) {
-    return { reply: result.response.text(), orderCreated: null };
+    return { reply: result.response.text(), ordersCreated: [] };
   }
 
-  // Gemini minta buat_pesanan dipanggil
-  const call = functionCalls[0];
-  const executionResult = await executeBuatPesanan(call.args);
+  // Eksekusi SEMUA function calls (bukan cuma [0]), biar multiple order
+  // dalam 1 pesan bisa ke-proses semuanya sekaligus
+  const executionResults = await Promise.all(
+    functionCalls.map((call) => executeBuatPesanan(call.args))
+  );
 
-  // kirim balik HASIL eksekusi ke Gemini, biar dia nyusun jawaban natural
-  // buat user (bukan kita yang hardcode kalimatnya)
+  // Susun semua hasil eksekusi jadi functionResponse parts,
+  // kirim balik ke Gemini sekaligus biar dia bisa nyusun 1 balasan natural
   const modelParts = result.response.candidates?.[0]?.content?.parts || [];
+  const functionResponseParts = functionCalls.map((call, i) => ({
+    functionResponse: {
+      name: call.name,
+      response: executionResults[i],
+    },
+  }));
+
   const followUp = await model.generateContent({
     contents: [
       ...history,
       userMessage,
       { role: "model", parts: modelParts },
-      {
-        role: "user",
-        parts: [
-          {
-            functionResponse: {
-              name: call.name,
-              response: executionResult,
-            },
-          },
-        ],
-      },
+      { role: "user", parts: functionResponseParts },
     ],
   });
 
+  // Kumpulin semua order yang berhasil dibuat jadi array
+  const ordersCreated = executionResults
+    .filter((r) => r.success)
+    .map((r) => r.order);
+
   return {
     reply: followUp.response.text(),
-    orderCreated: executionResult.success ? executionResult.order : null,
+    ordersCreated,
   };
 }
 

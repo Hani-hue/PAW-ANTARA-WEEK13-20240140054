@@ -92,4 +92,21 @@ async function getAllOrders() {
   return Order.findAll({ include: Product, order: [['createdAt', 'DESC']] });
 }
 
-module.exports = { createOrder, notifyAdminNewOrder, getAllOrders };
+const VALID_STATUSES = ['pending', 'processing', 'shipped', 'completed', 'cancelled'];
+
+async function updateOrderStatus(orderId, status) {
+  if (!VALID_STATUSES.includes(status)) {
+    return { success: false, message: `Status tidak valid. Pilihan: ${VALID_STATUSES.join(', ')}` };
+  }
+
+  const order = await Order.findByPk(orderId);
+  if (!order) {
+    return { success: false, message: `Order #${orderId} tidak ditemukan` };
+  }
+
+  order.status = status;
+  await order.save();
+  return { success: true, order };
+}
+
+module.exports = { createOrder, notifyAdminNewOrder, getAllOrders, updateOrderStatus };

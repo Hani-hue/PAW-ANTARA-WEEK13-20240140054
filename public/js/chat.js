@@ -85,7 +85,7 @@ chatForm.addEventListener("submit", async (e) => {
       throw new Error(result.message);
     }
 
-    const { reply, orderCreated } = result.data;
+    const { reply, ordersCreated = [] } = result.data;
 
     // update history buat konteks percakapan selanjutnya (format Gemini)
     const newHistory = [
@@ -103,16 +103,14 @@ chatForm.addEventListener("submit", async (e) => {
       isLoading: false,
     });
 
-    // kalo AI berhasil bikin order, kasih notice kecil + link ke invoice
-    if (orderCreated) {
+    // kalo ada order yang berhasil (bisa lebih dari 1), tampilkan notif per order
+    if (ordersCreated.length > 0) {
+      const orderNotices = ordersCreated.map((order) => ({
+        role: "bot",
+        text: `✅ Order #${order.id} berhasil dibuat! Cek detailnya di tab Invoice.`,
+      }));
       chatStore.setState({
-        messages: [
-          ...chatStore.getState().messages,
-          {
-            role: "bot",
-            text: `✅ Order #${orderCreated.id} berhasil dibuat! Cek detailnya di tab Invoice.`,
-          },
-        ],
+        messages: [...chatStore.getState().messages, ...orderNotices],
       });
       // refresh stok yang ditampilin di katalog biar sinkron
       setTimeout(() => window.location.reload(), 1500);

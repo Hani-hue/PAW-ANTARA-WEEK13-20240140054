@@ -1,4 +1,5 @@
 const productService = require('../services/product.service');
+const orderService = require('../services/order.service');
 
 // 🛡️ DRY: reuse productService.getAllProducts() yang sama dipake katalog & bot /stok.
 async function renderAdminProducts(req, res) {
@@ -6,7 +7,6 @@ async function renderAdminProducts(req, res) {
     const products = await productService.getAllProducts();
     res.render('admin-products', {
       products: products.map((p) => p.toJSON()),
-      storeName: process.env.STORE_NAME || 'Toko Kita',
       error: null,
     });
   } catch (err) {
@@ -17,7 +17,6 @@ async function renderAdminProducts(req, res) {
 // Form tambah produk kosong
 function renderCreateForm(req, res) {
   res.render('admin-product-form', {
-    storeName: process.env.STORE_NAME || 'Toko Kita',
     mode: 'create',
     product: null,
     error: null,
@@ -32,7 +31,6 @@ async function renderEditForm(req, res) {
       return res.redirect('/admin/products');
     }
     res.render('admin-product-form', {
-      storeName: process.env.STORE_NAME || 'Toko Kita',
       mode: 'edit',
       product: product.toJSON(),
       error: null,
@@ -49,7 +47,6 @@ async function createProduct(req, res) {
 
     if (!result.success) {
       return res.render('admin-product-form', {
-        storeName: process.env.STORE_NAME || 'Toko Kita',
         mode: 'create',
         product: req.body,
         error: result.message,
@@ -68,7 +65,6 @@ async function updateProduct(req, res) {
 
     if (!result.success) {
       return res.render('admin-product-form', {
-        storeName: process.env.STORE_NAME || 'Toko Kita',
         mode: 'edit',
         product: { id: req.params.id, ...req.body },
         error: result.message,
@@ -89,6 +85,36 @@ async function deleteProduct(req, res) {
   }
 }
 
+async function renderAdminInvoices(req, res) {
+  try {
+    // 🛡️ DRY: reuse getAllOrders() yang sama dipake invoice customer & API
+    const orders = await orderService.getAllOrders();
+    res.render('admin-invoices', {
+      orders: orders.map((o) => o.toJSON()),
+      success: req.query.success || null,
+      error: req.query.error || null,
+    });
+  } catch (err) {
+    res.status(500).send('Gagal memuat invoice admin: ' + err.message);
+  }
+}
+
+async function updateOrderStatus(req, res) {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const result = await orderService.updateOrderStatus(parseInt(id, 10), status);
+
+    if (!result.success) {
+      return res.redirect(`/admin/invoices?error=${encodeURIComponent(result.message)}`);
+    }
+    res.redirect('/admin/invoices?success=Status+pesanan+berhasil+diperbarui');
+  } catch (err) {
+    res.redirect(`/admin/invoices?error=${encodeURIComponent('Gagal update status: ' + err.message)}`);
+  }
+}
+
 module.exports = {
   renderAdminProducts,
   renderCreateForm,
@@ -96,4 +122,6 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  renderAdminInvoices,
+  updateOrderStatus,
 };

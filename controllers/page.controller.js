@@ -6,11 +6,9 @@ async function renderHome(req, res) {
     // 🛡️ DRY: fungsi yang sama dipake juga di controllers/product.controller.js
     // (GET /api/products) dan bot/handlers/stok.handler.js (/stok)
     const products = await productService.getAllProducts();
-    const storeName = process.env.STORE_NAME || 'Toko Kita';
 
     res.render('index', {
       products: products.map((p) => p.toJSON()),
-      storeName,
       error: null,
     });
   } catch (err) {
@@ -38,13 +36,11 @@ async function submitOrder(req, res) {
       const products = await productService.getAllProducts();
       return res.render('index', {
         products: products.map((p) => p.toJSON()),
-        storeName: process.env.STORE_NAME || 'Toko Kita',
         error: result.message,
       });
     }
 
     res.render('success', {
-      storeName: process.env.STORE_NAME || 'Toko Kita',
       order: result.order,
       product: result.product,
     });

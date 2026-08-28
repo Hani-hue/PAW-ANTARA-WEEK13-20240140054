@@ -1,30 +1,31 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Order Berhasil</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
-  <div class="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-sm text-center shadow-sm">
-    <div class="text-4xl mb-3">✅</div>
-    <h1 class="text-lg font-bold text-gray-800 mb-1">Order Berhasil!</h1>
-    <p class="text-sm text-gray-500 mb-4">Admin <%= storeName %> udah dapet notifikasi order kamu</p>
+<%- include('partials/header', { 
+  title: 'Order Berhasil',
+  hideNav: true
+}) %>
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="rounded-2xl p-8 w-full max-w-sm text-center shadow-lg" style="background:#fff;border:1px solid #c4d6ff">
 
-    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-left text-sm text-gray-600 mb-4">
-      <p><strong>Order ID:</strong> #<%= order.id %></p>
-      <p><strong>Produk:</strong> <%= product.name %></p>
-      <p><strong>Jumlah:</strong> <%= order.quantity %></p>
-      <p><strong>Total:</strong> Rp<%= (product.price * order.quantity).toLocaleString('id-ID') %></p>
-      <p><strong>Atas nama:</strong> <%= order.buyerName %></p>
+    <!-- Success Icon -->
+    <div class="flex justify-center mb-4">
+      <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow" style="background:linear-gradient(135deg,#1B4EF5,#5996FF)">✅</div>
     </div>
 
-    <p class="text-xs text-gray-400 mb-4">Admin bakal segera menghubungi kamu buat konfirmasi pembayaran & pengiriman.</p>
+    <h1 class="text-xl font-bold mb-1" style="color:#1B4EF5">Order Berhasil!</h1>
+    <p class="text-sm mb-5" style="color:#5996FF">Admin <strong><%= storeName %></strong> udah dapet notifikasi order kamu</p>
 
-    <a href="/" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 rounded-lg">
-      Balik ke Katalog
+    <div class="rounded-xl p-4 text-left text-sm space-y-1.5 mb-5" style="background:#f8f9ff;border:1px solid #c4d6ff">
+      <p><span class="font-semibold" style="color:#1B4EF5">Order ID:</span> <span style="color:#3874FF">#<%= order.id %></span></p>
+      <p><span class="font-semibold" style="color:#1B4EF5">Produk:</span> <span style="color:#3874FF"><%= product.name %></span></p>
+      <p><span class="font-semibold" style="color:#1B4EF5">Jumlah:</span> <span style="color:#3874FF"><%= order.quantity %></span></p>
+      <p><span class="font-semibold" style="color:#1B4EF5">Total:</span> <span class="font-bold" style="color:#3874FF">Rp<%= (product.price * order.quantity).toLocaleString('id-ID') %></span></p>
+      <p><span class="font-semibold" style="color:#1B4EF5">Atas nama:</span> <span style="color:#3874FF"><%= order.buyerName %></span></p>
+    </div>
+
+    <p class="text-xs mb-5" style="color:#5996FF">Admin bakal segera menghubungi kamu buat konfirmasi pembayaran & pengiriman.</p>
+
+    <a href="/" class="block w-full text-white text-sm font-semibold py-2.5 rounded-xl transition-all hover:opacity-90 shadow" style="background:linear-gradient(135deg,#1B4EF5,#3874FF)">
+      ← Balik ke Katalog
     </a>
   </div>
-</body>
-</html>
+</div>
+<%- include('partials/footer') %>

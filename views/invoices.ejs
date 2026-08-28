@@ -1,45 +1,38 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invoice - <%= storeName %></title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-  <%- include('partials/nav', { storeName, active: 'invoice' }) %>
+<%- include('partials/header', { title: 'Invoice', active: 'invoice' }) %>
 
   <main class="max-w-3xl mx-auto px-4 pb-10">
-    <h2 class="font-semibold text-gray-700 mb-4">Riwayat Invoice</h2>
+    <h2 class="font-bold text-lg mb-5" style="color:#1B4EF5">🧾 Riwayat Invoice</h2>
 
     <% if (orders.length === 0) { %>
-      <p class="text-center text-gray-400 py-10">Belum ada order masuk.</p>
+      <div class="text-center py-16 rounded-2xl" style="background:#fff;border:1px solid #c4d6ff">
+        <div class="text-4xl mb-3">📭</div>
+        <p style="color:#5996FF">Belum ada order masuk.</p>
+      </div>
     <% } %>
 
-    <div class="space-y-3">
+    <div class="space-y-4">
       <% orders.forEach(function(order) { %>
-        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <span class="font-semibold text-gray-800">INV-<%= String(order.id).padStart(5, '0') %></span>
-            <span class="text-xs text-gray-400">
+        <div class="rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" style="background:#fff;border:1px solid #c4d6ff">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-base" style="color:#1B4EF5">INV-<%= String(order.id).padStart(5, '0') %></span>
+            <span class="text-xs px-3 py-1 rounded-full" style="background:#F4CEFF;color:#3874FF">
               <%= new Date(order.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) %>
             </span>
           </div>
-          <div class="text-sm text-gray-600 space-y-1">
-            <p><strong>Produk:</strong> <%= order.Product ? order.Product.name : '(produk dihapus)' %></p>
-            <p><strong>Jumlah:</strong> <%= order.quantity %></p>
+          <div class="text-sm space-y-1.5" style="color:#3874FF">
+            <p><span class="font-semibold" style="color:#1B4EF5">Produk:</span> <%= order.Product ? order.Product.name : '(produk dihapus)' %></p>
+            <p><span class="font-semibold" style="color:#1B4EF5">Jumlah:</span> <%= order.quantity %></p>
             <% if (order.Product) { %>
-              <p><strong>Total:</strong> Rp<%= (order.Product.price * order.quantity).toLocaleString('id-ID') %></p>
+              <p><span class="font-semibold" style="color:#1B4EF5">Total:</span> Rp<%= (order.Product.price * order.quantity).toLocaleString('id-ID') %></p>
             <% } %>
-            <p><strong>Atas nama:</strong> <%= order.buyerName %></p>
+            <p><span class="font-semibold" style="color:#1B4EF5">Atas nama:</span> <%= order.buyerName %></p>
             <p>
-              <strong>Status:</strong>
-              <span class="inline-block px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700"><%= order.status %></span>
+              <span class="font-semibold" style="color:#1B4EF5">Status:</span>
+              <span class="inline-block px-2.5 py-0.5 text-xs rounded-full ml-1" style="background:#fff9e0;color:#b45309;border:1px solid #fcd34d"><%= order.status %></span>
             </p>
           </div>
         </div>
       <% }) %>
     </div>
   </main>
-</body>
-</html>
+<%- include('partials/footer') %>

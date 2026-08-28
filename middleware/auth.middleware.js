@@ -27,6 +27,7 @@ function isCustomer(req, res, next) {
 // jadi nav.ejs bisa nampilin nama user / tombol login-logout tanpa tiap controller kirim manual.
 function attachUserToViews(req, res, next) {
   res.locals.currentUser = req.session.user || null;
+  res.locals.storeName = process.env.STORE_NAME || 'Toko Kita';
   next();
 }
 

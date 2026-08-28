@@ -1,61 +1,68 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daftar - Toko Kita</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
-  <div class="w-full max-w-sm bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-    <h1 class="text-xl font-bold text-gray-800 mb-1">Daftar Akun</h1>
-    <p class="text-sm text-gray-500 mb-5">Daftar sebagai customer buat mulai belanja.</p>
+<%- include('partials/header', { 
+  title: 'Daftar Akun',
+  hideNav: true,
+  extraCss: `input:focus { outline: none; box-shadow: 0 0 0 2px #5996FF; border-color: #5996FF !important; }`
+}) %>
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-sm rounded-2xl p-8 shadow-lg" style="background:#fff;border:1px solid #c4d6ff">
+
+    <!-- Logo / Icon -->
+    <div class="flex justify-center mb-4">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-2xl shadow" style="background:linear-gradient(135deg,#3874FF,#5996FF)">✨</div>
+    </div>
+
+    <h1 class="text-2xl font-bold text-center mb-1" style="color:#1B4EF5">Daftar Akun</h1>
+    <p class="text-sm text-center mb-6" style="color:#5996FF">Daftar sebagai customer buat mulai belanja.</p>
 
     <% if (error) { %>
-      <div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">
+      <div class="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style="background:#fff0f0;border:1px solid #fca5a5;color:#dc2626">
         <%= error %>
       </div>
     <% } %>
 
-    <form method="POST" action="/register" class="space-y-3">
+    <form method="POST" action="/register" class="space-y-4">
       <div>
-        <label class="text-sm text-gray-600">Username</label>
+        <label class="text-sm font-medium block mb-1" style="color:#3874FF">Username</label>
         <input
           type="text"
           name="username"
           required
-          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 rounded-xl text-sm"
+          style="border:1px solid #c4d6ff;color:#1B4EF5;background:#f8f9ff"
         />
       </div>
       <div>
-        <label class="text-sm text-gray-600">Password</label>
+        <label class="text-sm font-medium block mb-1" style="color:#3874FF">Password</label>
         <input
           type="password"
           name="password"
           required
           minlength="6"
-          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 rounded-xl text-sm"
+          style="border:1px solid #c4d6ff;color:#1B4EF5;background:#f8f9ff"
         />
       </div>
       <div>
-        <label class="text-sm text-gray-600">Konfirmasi Password</label>
+        <label class="text-sm font-medium block mb-1" style="color:#3874FF">Konfirmasi Password</label>
         <input
           type="password"
           name="confirmPassword"
           required
           minlength="6"
-          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 rounded-xl text-sm"
+          style="border:1px solid #c4d6ff;color:#1B4EF5;background:#f8f9ff"
         />
       </div>
       <button
         type="submit"
-        class="w-full bg-blue-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-blue-700"
-      >Daftar</button>
+        class="w-full text-white text-sm font-semibold py-2.5 rounded-xl mt-2 transition-all hover:opacity-90 shadow"
+        style="background:linear-gradient(135deg,#3874FF,#5996FF)"
+      >Daftar →</button>
     </form>
 
-    <p class="text-sm text-gray-500 mt-4 text-center">
-      Udah punya akun? <a href="/login" class="text-blue-600 font-medium">Masuk</a>
+    <p class="text-sm text-center mt-5" style="color:#5996FF">
+      Udah punya akun? <a href="/login" class="font-semibold hover:underline" style="color:#1B4EF5">Masuk</a>
     </p>
   </div>
-</body>
-</html>
+</div>
+<%- include('partials/footer') %>

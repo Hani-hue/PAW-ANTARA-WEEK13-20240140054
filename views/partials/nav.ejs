@@ -1,34 +1,42 @@
-<header class="bg-white border-b border-gray-200 py-4 px-6 mb-6">
+<header class="bg-white border-b border-blue-100 py-4 px-6 mb-6 shadow-sm">
   <div class="max-w-5xl mx-auto flex items-center justify-between">
     <div>
-      <h1 class="text-xl font-bold text-gray-800"><%= storeName %></h1>
-      <p class="text-sm text-gray-500">Belanja & tanya-tanya lewat chat AI</p>
+      <h1 class="text-xl font-bold" style="color:#1B4EF5"><%= storeName %></h1>
+      <p class="text-xs" style="color:#5996FF">Belanja & tanya-tanya lewat chat AI</p>
     </div>
     <nav class="flex items-center gap-2">
       <a
         href="/"
-        class="px-3 py-1.5 text-sm rounded-lg font-medium <%= active === 'katalog' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600' %>"
+        class="px-3 py-1.5 text-sm rounded-lg font-medium transition-all"
+        style="<%= active === 'katalog' ? 'background:#1B4EF5;color:#fff' : 'background:#F4CEFF;color:#3874FF' %>"
       >Katalog & Chat</a>
       <a
         href="/invoices"
-        class="px-3 py-1.5 text-sm rounded-lg font-medium <%= active === 'invoice' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600' %>"
+        class="px-3 py-1.5 text-sm rounded-lg font-medium transition-all"
+        style="<%= active === 'invoice' ? 'background:#1B4EF5;color:#fff' : 'background:#F4CEFF;color:#3874FF' %>"
       >Invoice</a>
 
       <% if (typeof currentUser !== 'undefined' && currentUser) { %>
         <% if (currentUser.role === 'admin') { %>
           <a
             href="/admin/products"
-            class="px-3 py-1.5 text-sm rounded-lg font-medium <%= active === 'admin' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600' %>"
+            class="px-3 py-1.5 text-sm rounded-lg font-medium transition-all"
+            style="<%= active === 'admin' ? 'background:#1B4EF5;color:#fff' : 'background:#F4CEFF;color:#3874FF' %>"
           >Kelola Produk</a>
+          <a
+            href="/admin/invoices"
+            class="px-3 py-1.5 text-sm rounded-lg font-medium transition-all"
+            style="<%= active === 'admin-invoice' ? 'background:#1B4EF5;color:#fff' : 'background:#F4CEFF;color:#3874FF' %>"
+          >Kelola Invoice</a>
         <% } %>
-        <span class="text-sm text-gray-500 ml-2">Hai, <%= currentUser.username %></span>
+        <span class="text-sm ml-2" style="color:#5996FF">Hai, <%= currentUser.username %></span>
         <form method="POST" action="/logout" class="inline">
-          <button type="submit" class="px-3 py-1.5 text-sm rounded-lg font-medium bg-gray-100 text-gray-600 hover:bg-gray-200">
+          <button type="submit" class="px-3 py-1.5 text-sm rounded-lg font-medium transition-all hover:opacity-80" style="background:#F4CEFF;color:#1B4EF5">
             Keluar
           </button>
         </form>
       <% } else { %>
-        <a href="/login" class="px-3 py-1.5 text-sm rounded-lg font-medium bg-gray-100 text-gray-600">Masuk</a>
+        <a href="/login" class="px-3 py-1.5 text-sm rounded-lg font-medium transition-all" style="background:#F4CEFF;color:#3874FF">Masuk</a>
       <% } %>
     </nav>
   </div>
