@@ -15,6 +15,10 @@ const { formatRupiah } = require('../utils/formatRupiah');
  *
  * Dengan service layer: query cukup ditulis SEKALI di sini,
  * controller & bot handler tinggal MEMANGGIL fungsi ini.
+ *
+ * Fungsi create/update/delete di bawah ini dipake khusus
+ * admin.controller.js (dashboard admin) - tapi tetep ditaruh di
+ * service layer ini biar konsisten satu pintu buat semua query produk.
  * ============================================================
  */
 
@@ -24,6 +28,53 @@ async function getAllProducts() {
 
 async function getProductById(id) {
   return Product.findByPk(id);
+}
+
+async function createProduct({ name, description, price, stock }) {
+  if (!name || price === undefined || price === null) {
+    return { success: false, message: 'Nama dan harga produk wajib diisi' };
+  }
+  if (Number(price) < 0 || Number(stock) < 0) {
+    return { success: false, message: 'Harga dan stok tidak boleh negatif' };
+  }
+
+  const product = await Product.create({
+    name,
+    description: description || null,
+    price: Number(price),
+    stock: Number(stock) || 0,
+  });
+  return { success: true, product };
+}
+
+async function updateProduct(id, { name, description, price, stock }) {
+  const product = await Product.findByPk(id);
+  if (!product) {
+    return { success: false, message: 'Produk tidak ditemukan' };
+  }
+  if (!name || price === undefined || price === null) {
+    return { success: false, message: 'Nama dan harga produk wajib diisi' };
+  }
+  if (Number(price) < 0 || Number(stock) < 0) {
+    return { success: false, message: 'Harga dan stok tidak boleh negatif' };
+  }
+
+  await product.update({
+    name,
+    description: description || null,
+    price: Number(price),
+    stock: Number(stock) || 0,
+  });
+  return { success: true, product };
+}
+
+async function deleteProduct(id) {
+  const product = await Product.findByPk(id);
+  if (!product) {
+    return { success: false, message: 'Produk tidak ditemukan' };
+  }
+  await product.destroy();
+  return { success: true };
 }
 
 /**
@@ -44,4 +95,11 @@ function formatProductListText(products) {
   return lines.join('\n\n');
 }
 
-module.exports = { getAllProducts, getProductById, formatProductListText };
+module.exports = {
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  formatProductListText,
+};
